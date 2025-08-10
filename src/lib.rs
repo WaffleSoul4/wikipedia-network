@@ -7,21 +7,31 @@
 //! ```rust
 //! # use wikipedia_network::{Page, WikipediaUrl};
 //! # fn main() -> Result<(), reqwest::Error> {
-//! let url = WikipediaUrl::from_path("/wiki/Waffles").unwrap();
-//! let mut waffles_page = Page::new(url);
-//!
-//! let title: String = waffles_page.get_title()?;
+//! let url = WikipediaUrl::from_path("/wiki/Waffles").unwrap(); // Parse the url
+//! let mut waffles_page = Page::new(url); // Initialize the page struct
+//! 
+//! // Load the body into the struct and get the title
+//! let title: String = waffles_page.get_title()?; 
 //! assert_eq!(title.as_str(), "Waffle");
+//! 
+//! // Get all the Wikipedia links on the page
+//! let connections: Vec<Page> = waffles_page.get_connections()?; 
+//! 
+//! // Remove the body from the struct for memory efficiency
+//! waffles_page.unload_body();
 //!
-//! let connections: Vec<Page> = waffles_page.get_connections()?;
-//!
-//! for mut connection in connections {
-//!     println!("Page {} at url {}", connection.get_title()?, connection.get_url())
+//! for mut page in connections {
+//!     // Print the names and URLs of all of the pages
+//!     println!("Page {} at url {}", page.get_title()?, page.get_url())
 //! }
 //! # Ok(())
 //! # }
 //! ```
 //!
+
+// TODO:
+//     - Language support
+//     - Async (mmm...)
 
 use regex::Regex;
 use reqwest::{IntoUrl, Url};
@@ -266,7 +276,7 @@ mod tests {
         let url = WikipediaUrl::from_path("/wiki/Waffle".to_string()).unwrap();
         let mut waffle_page = Page::new(url);
 
-        let connections = waffle_page.get_connections().unwrap();
+        waffle_page.get_connections().unwrap();
     }
 
     #[test]

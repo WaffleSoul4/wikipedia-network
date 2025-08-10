@@ -1,7 +1,14 @@
 [package]
 name = "wikipedia-network"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
+description = "A simple crate to turn Wikipedia into a semantic network"
+readme = "README.md"
+repository = "https://github.com/WaffleSoul4/wikipedia-network"
+license = "MIT OR Unlicense"
+keywords = ["Semantic_Network", "Wikipedia"]
+documentation = "https://docs.rs/wikipedia-network/"
+
 
 [dependencies]
 regex = "1.11.1"
