@@ -1,6 +1,6 @@
 [package]
 name = "wikipedia-network"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2024"
 description = "A simple crate to turn Wikipedia into a semantic network"
 readme = "README.md"
@@ -14,3 +14,7 @@ documentation = "https://docs.rs/wikipedia-network/"
 regex = "1.11.1"
 reqwest = { version = "0.12.22", features = ["blocking"] }
 thiserror = "2.0.12"
+petgraph_lib = { version = ">=0.8.2", optional = true, package = "petgraph"}
+
+[features]
+petgraph = ["dep:petgraph_lib"]

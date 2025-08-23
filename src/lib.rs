@@ -33,6 +33,9 @@
 //     - Language support
 //     - Async (mmm...)
 
+#[cfg(feature = "petgraph")]
+pub mod petgraph;
+
 use regex::Regex;
 use reqwest::{IntoUrl, Url};
 use thiserror::Error;
@@ -105,7 +108,7 @@ pub enum WikipediaUrlInvalidError {
 }
 
 /// A struct representing a Wikipedia page, optionally containing the title and body of the page
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Page {
     title: Option<String>,
     url: WikipediaUrl,
@@ -135,7 +138,10 @@ impl Page {
 
         let url = self.get_url();
 
-        self.body = Some(reqwest::blocking::get(url.clone())?.text()?);
+        let client = reqwest::blocking::Client::builder().user_agent("wikipedia-network/0.1.2").build()?;
+
+
+        self.body = Some(client.get(url.clone()).send()?.text()?);
 
         Ok(())
     }
@@ -198,10 +204,14 @@ impl Page {
 
     /// Get the title from a body of HTML
     fn get_title_from_body(body: &String) -> Result<String, ReqwestError> {
+        println!("{body:?}");
+
         let title_unparsed = body
             .lines()
             .filter(|l| l.contains("<title>"))
             .collect::<String>();
+
+        println!("{:?}", &title_unparsed);
 
         let regex = Regex::new(r"([a-zA-Z ]+) - Wikipedia").expect("Title regex failed to compile");
 
